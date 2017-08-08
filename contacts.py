@@ -11,7 +11,7 @@ content = ""
 def retrieve_contacts():
     req = urllib2.Request(BASE_URL + 'people/me/connections?requestMask.includeField=person.names%2Cperson.phone_numbers')
     req.add_header('Host','people.googleapis.com')
-    req.add_header('Authorization',ACCESS_TOKEN)
+    req.add_header('Authorization', ACCESS_TOKEN)
     resp = urllib2.urlopen(req)
     content = resp.read()
     d = json.loads(content)
@@ -60,25 +60,14 @@ def add_contacts():
     name = raw_input("Enter Name: ")
     phone = raw_input("Enter Phone Number : ")
     phone1 = "+91" + phone
-    payload = {
-       "names": [
-        {
-         "givenName": name
-        }
-        ],
-        "phoneNumbers": [
-        {
-         "canonicalForm": phone1,
-         "value":phone
-        }
-        ]
-      }
+    payload = {"phoneNumbers": [{"canonicalForm": phone1, "value": phone}], "names": [{"givenName": name}]}
     payload = json.dumps(payload)
     print payload
     url = BASE_URL + "people:createContact"
     print url
     req = urllib2.Request(url)
     req.add_header('Host', HOST)
+    req.add_header('Content-type',"application/json")
     req.add_header('Authorization', ACCESS_TOKEN)
     req.add_data(payload)
     resp = urllib2.urlopen(req)
@@ -130,6 +119,7 @@ def update_contacts():
         req.add_data(payload)
         req.add_header('Host', HOST)
         req.add_header('Authorization', ACCESS_TOKEN)
+        req.add_header('Content-type', "application/json")
         req.get_method = lambda: 'PATCH'  # creates the PATCH method similar to PUT
         resp = urllib2.urlopen(req)
         content = resp.read()
@@ -139,4 +129,4 @@ def update_contacts():
 # display_contacts()
 # delete_contacts()
 # add_contacts()
-# update_contacts()
+update_contacts()
